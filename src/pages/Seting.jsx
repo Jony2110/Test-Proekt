@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const Seting = () => {
   return (
     <div className="p-6 flex-1 bg-gray-50">
-      <div className="relative h-[17.625rem] bg-[url('./img/bg-seting.png')] from-blue-500 to-purple-600 rounded-lg mb-6">
+      <div className="relative h-[17.625rem] bg-[url('../../public/img/bg-seting.png')] from-blue-500 to-purple-600 rounded-lg mb-6">
         <img
           className="absolute -bottom-20 left-4 w-[8.563rem] h-[8.563rem] rounded-full border-4 border-white"
           src="./img/ProfileFoto.svg"
