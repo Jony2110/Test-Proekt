@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const Seting = () => {
   return (
     <div className="p-6 flex-1 bg-gray-50">
-      <div className="relative h-[17.625rem] bg-[url('../../public/img/bg-seting.png')] from-blue-500 to-purple-600 rounded-lg mb-6">
+      <div className="relative h-[17.625rem] bg-[url('./img/bg-seting.png')] from-blue-500 to-purple-600 rounded-lg mb-6">
         <img
           className="absolute -bottom-20 left-4 w-[8.563rem] h-[8.563rem] rounded-full border-4 border-white"
           src="../../public/img/ProfileFoto.svg"
@@ -67,7 +67,7 @@ const Seting = () => {
 
       <div className="w-[34.75rem] max-w-md  border-2 border-gray-300 rounded-lg flex flex-col items-center justify-center text-center">
       <div className="text-gray-400 mb-4">
-       <img src="../../public/img/InputFileLogo.svg" alt="" />
+       <img src="./img/InputFileLogo.svg" alt="" />
       </div>
       <p className="text-gray-500">Click to upload or drag and drop</p>
       <p className="text-gray-400 text-sm">SVG, PNG, JPG or GIF (max, 800x400px)</p>
