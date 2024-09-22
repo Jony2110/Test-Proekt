@@ -6,7 +6,7 @@ const Seting = () => {
       <div className="relative h-[17.625rem] bg-[url('./img/bg-seting.png')] from-blue-500 to-purple-600 rounded-lg mb-6">
         <img
           className="absolute -bottom-20 left-4 w-[8.563rem] h-[8.563rem] rounded-full border-4 border-white"
-          src="../../public/img/ProfileFoto.svg"
+          src="./img/ProfileFoto.svg"
           alt="User Avatar"
         />
       </div>
