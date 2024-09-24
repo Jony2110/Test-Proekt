@@ -1,90 +1,55 @@
-import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
 
-function Login() {
-  const [loading, setLoading] = useState(false);
-  const userNameRef = useRef("");
-  const passwordRef = useRef("");
-  const navigate = useNavigate();
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const userName = userNameRef.current.value;
-    const password = passwordRef.current.value;
-
-    if (!userName) {
-      alert("Введите имя пользователя");
-      return;
-    }
-
-    if (!password) {
-      alert("Введите пароль");
-      return;
-    } else if (password.length < 3) {
-      alert("Пароль должен быть не менее 3 символов");
-      return;
-    }
-
-    const user = {
-      userName,
-      password
-    };
-
-    setLoading(true);
-
-    fetch('https://auth-rg69.onrender.com/api/auth/signin', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(user)
-    })
-      .then(resp => resp.json())
-      .then(data => {
-        if (data.message === 'Invalid Username or Password!') {
-          alert('Неверное имя пользователя или пароль');
-          return;
-        }
-
-        if (data.accessToken) {
-          alert('Вход выполнен успешно');
-          localStorage.setItem('token', data.accessToken);  // Сохранение токена
-          navigate('/dashboard'); // Перенаправление
-        } else {
-          alert('Что-то пошло не так. Попробуйте снова.');
-        }
-      })
-      .catch(err => {
-        console.log('Ошибка', err);
-        alert('Произошла ошибка при входе');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
-
+const LoginPage = () => {
   return (
-    <div>
-      <Link to={"/registor"}><button>REGISTER</button></Link>
-      <h1>Login page</h1>
-      <form className="p-6 rounded-lg space-y-4">
-        <div className="flex flex-col gap-7">
-          <div>
-            <label className="block text-sm font-medium mb-3">User Name</label>
-            <input ref={userNameRef} type="text" className="input input-bordered w-[19.25rem] h-[2.813rem]" placeholder="Enter your UserName...." />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-3">Password</label>
-            <input ref={passwordRef} type="password" className="input input-bordered w-[19.25rem] h-[2.813rem]" placeholder="Enter your password..." />
-          </div>
-        </div> 
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 w-full">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-2xl font-semibold text-center mb-2">Login Page</h2>
+        <p className="text-gray-500 text-center mb-4">Login into your account</p>
         
-        {loading && <button disabled>LOADING.....</button>}
-        {!loading && <button onClick={handleSubmit}>LOGIN</button>}
-      </form>
+        <div className="flex justify-center mb-4">
+          <button className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center mr-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/9b/Google_Icons_Logo.png" alt="Google" className="h-5 mr-2"/>
+            Google
+          </button>
+          <button className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" className="h-5 mr-2"/>
+            Facebook
+          </button>
+        </div>
+
+        <hr className="my-4" />
+        <p className="text-center mb-4">Or continue with</p>
+
+        <form>
+          <input
+            type="email"
+            placeholder="Email"
+            className="border border-gray-300 rounded-lg w-full p-2 mb-4"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border border-gray-300 rounded-lg w-full p-2 mb-4"
+            required
+          />
+
+          <div className="flex items-center justify-between mb-6">
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2"/>
+              Remember me
+            </label>
+            <a href="#" className="text-red-500 hover:underline">Recover Password</a>
+          </div>
+
+          <button className="bg-gray-500 text-white rounded-lg w-full p-2 hover:bg-gray-600">
+            Log In
+          </button>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
-export default Login;
+export default LoginPage;

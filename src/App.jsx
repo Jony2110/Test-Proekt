@@ -5,6 +5,7 @@ import Registor from "./pages/Registor";
 import Seting from "./pages/Seting";
 import Home from "./pages//Home";
 import Login from "./pages/Login";
+import File from "./pages/File";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -60,6 +61,14 @@ function App() {
           element={
             <MainLayout>
               <Seting></Seting>
+            </MainLayout>
+          }
+        ></Route>
+        <Route
+          path="/file"
+          element={
+            <MainLayout>
+              <File></File>
             </MainLayout>
           }
         ></Route>
