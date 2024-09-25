@@ -1,6 +1,40 @@
-import React from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('https://trello.vimlc.uz:8000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+       
+        console.log('Login successful:', data);
+        localStorage.setItem('authToken', data.token); 
+        alert('Login successful!');
+      } else {
+        
+        setError(data.message || 'Login failed');
+      }
+    } catch (error) {
+      setError('An error occurred during login. Please try again later.');
+      console.error('Login error:', error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 w-full">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
@@ -21,32 +55,42 @@ const LoginPage = () => {
         <hr className="my-4" />
         <p className="text-center mb-4">Or continue with</p>
 
-        <form>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>} 
+
+        <form onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
             className="border border-gray-300 rounded-lg w-full p-2 mb-4"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
             type="password"
             placeholder="Password"
             className="border border-gray-300 rounded-lg w-full p-2 mb-4"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
           <div className="flex items-center justify-between mb-6">
             <label className="flex items-center">
-              <input type="checkbox" className="mr-2"/>
+              <input type="checkbox" className="mr-2" />
               Remember me
             </label>
             <a href="#" className="text-red-500 hover:underline">Recover Password</a>
           </div>
 
-          <button className="bg-gray-500 text-white rounded-lg w-full p-2 hover:bg-gray-600">
+          <button className="bg-gray-500 text-white rounded-lg w-full p-2 hover:bg-gray-600" type="submit">
             Log In
           </button>
+          
         </form>
+        <div className='flex justify-center mt-5'>
+        <Link className='hover:text-green-600  text-center' to='/registor'>REGISTOR</Link>
+        </div>
       </div>
     </div>
   );
