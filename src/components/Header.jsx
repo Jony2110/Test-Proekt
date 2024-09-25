@@ -6,7 +6,7 @@ const navigate = useNavigate()
 
 function handleRegistor(event) {
   event.preventDefault();
-  navigate("/registor")
+  navigate("/login")
 
 }
 
