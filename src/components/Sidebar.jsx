@@ -23,7 +23,7 @@ const Sidebar = () => {
           <img className="w-5" src="./img/Icon2.svg" alt="" />
         </li>
         <li>
-          <img className="w-5" src="./img/book.svg" alt="" />
+          <img className="w-5" src="./img/book.svg" alt="sfsf" />
         </li>
         <li>
           <img
@@ -36,10 +36,10 @@ const Sidebar = () => {
           />
         </li>
         <li>
-          <img className="w-5" src="./img/Message.svg" alt="" />
+          <img className="w-5" src="./img/Message.svg" alt="sfs" />
         </li>
         <li>
-          <img className="w-5" src="./img/File.svg" alt="" />
+          <img className="w-5" src="./img/File.svg" alt="sdfsf" />
         </li>
       </ul>
     </aside>
