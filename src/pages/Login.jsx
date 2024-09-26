@@ -1,17 +1,17 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://trello.vimlc.uz:8000/auth/login', {
+      const response = await fetch('https://trello.vimlc.uz/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,9 +26,10 @@ const LoginPage = () => {
         console.log('Login successful:', data);
         localStorage.setItem('authToken', data.token); 
         alert('Login successful!');
+        navigate("/")
       } else {
         
-        setError(data.message || 'Login failed');
+        setError(data.message || 'Login failed'); 
       }
     } catch (error) {
       setError('An error occurred during login. Please try again later.');

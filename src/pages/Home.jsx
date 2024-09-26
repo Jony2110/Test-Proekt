@@ -1,16 +1,7 @@
-
-import  { useState } from "react";
-
-
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // for redirecting to login
 
 
-const initialCards = [
-  { id: '1', content: 'Card 1' },
-  { id: '2', content: 'Card 2' },
-  { id: '3', content: 'Card 3' },
-  { id: '4', content: 'Card 4' },
-];
 
 function Home() {
   const [boardName, setBoardName] = useState("");
@@ -18,26 +9,20 @@ function Home() {
   const [color, setColor] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-
-
-
-
-  const [cards, setCards] = useState(initialCards);
-
-
-  const onDragEnd = (result) => {
-    if (!result.destination) return; 
-
-    const newCards = Array.from(cards);
-    const [movedCard] = newCards.splice(result.source.index, 1); 
-    newCards.splice(result.destination.index, 0, movedCard);
-
-    setCards(newCards);
-  };
+  
+  const navigate = useNavigate(); 
 
   const handleCreateBoard = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      setError("User is not authenticated. Please log in.");
+    
+      navigate("/login"); 
+      return;
+    }
 
     const newBoard = {
       name: boardName,
@@ -46,10 +31,11 @@ function Home() {
     };
 
     try {
-      const response = await fetch("https://trello.vimlc.uz:8000/api/boards", {
+      const response = await fetch("https://trello.vimlc.uz/api/boards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, 
         },
         body: JSON.stringify(newBoard),
       });
@@ -57,10 +43,8 @@ function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        
         setSuccess("Board created successfully!");
-        setError(""); 
-       
+        setError("");
         document.getElementById("my_modal_1").close();
         setBoardName("");
         setDescription("");
@@ -84,7 +68,6 @@ function Home() {
           >
             <h1>Create New Board</h1>
             <p>Click here to create a new board</p>
-            
           </div>
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box">
@@ -143,46 +126,6 @@ function Home() {
           </dialog>
         </div>
       </div>
-      
-
-
-
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="cards">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{ padding: 20, width: 300, background: '#f0f0f0' }}
-            >
-              {cards.map((card, index) => (
-                <Draggable key={card.id} draggableId={card.id} index={index}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={{
-                        userSelect: 'none',
-                        padding: 16,
-                        margin: '0 0 8px 0',
-                        background: '#fff',
-                        borderRadius: '4px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        ...provided.draggableProps.style,
-                      }}
-                    >
-                      {card.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-
     </div>
   );
 }

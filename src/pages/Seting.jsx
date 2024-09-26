@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 const Seting = () => {
 
 
-  const [selectedFile, setSelectedFile] = useState(null); // Состояние для хранения выбранного файла
+  const [selectedFile, setSelectedFile] = useState(null); 
   const fileInputRef = useRef(null);
 
-  // Функция для открытия окна выбора файла
+  
   const openFileDialog = () => {
     fileInputRef.current.click();
   };

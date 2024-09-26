@@ -1,6 +1,5 @@
-
 import  { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -10,7 +9,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
+const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -21,7 +20,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://trello.vimlc.uz:8000/auth/register', {
+      const response = await fetch('http://trello.vimlc.uz:8000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,6 +39,7 @@ const Register = () => {
       if (response.ok) {
         setSuccess('Account created successfully');
         setError('');
+        navigate("/login")
         
       } else {
         setError(data.message || 'Registration failed');
