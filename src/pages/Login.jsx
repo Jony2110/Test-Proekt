@@ -27,6 +27,7 @@ const navigate = useNavigate()
         localStorage.setItem('authToken', data.token); 
         localStorage.setItem('userName', data.user.name);
         localStorage.setItem('userEmail', data.user.email);
+        console.log(15)
         navigate("/")
       } else {
         
