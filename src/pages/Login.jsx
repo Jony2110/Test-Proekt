@@ -25,7 +25,8 @@ const navigate = useNavigate()
        
         console.log('Login successful:', data);
         localStorage.setItem('authToken', data.token); 
-        alert('Login successful!');
+        localStorage.setItem('userName', data.user.name);
+        localStorage.setItem('userEmail', data.user.email);
         navigate("/")
       } else {
         
@@ -45,7 +46,7 @@ const navigate = useNavigate()
         
         <div className="flex justify-center mb-4">
           <button className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center mr-2">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/9b/Google_Icons_Logo.png" alt="Google" className="h-5 mr-2"/>
+            <img src="../../public/img/google.svg" alt="Google" className="h-5 mr-2"/>
             Google
           </button>
           <button className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center">

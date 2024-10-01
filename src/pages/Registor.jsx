@@ -1,53 +1,54 @@
-import  { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-const navigate = useNavigate()
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-   
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
     try {
-      const response = await fetch('http://trello.vimlc.uz:8000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          password: password,
-          confirmPassword: confirmPassword
-        }),
-      });
+      const response = await fetch(
+        "http://trello.vimlc.uz:8000/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            password: password,
+            confirmPassword: confirmPassword,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Account created successfully');
-        setError('');
-        navigate("/login")
-        
+        setSuccess("Account created successfully");
+        setError("");
+        navigate("/login");
       } else {
-        setError(data.message || 'Registration failed');
-        setSuccess('');
+        setError(data.message || "Registration failed");
+        setSuccess("");
       }
     } catch (err) {
-      setError('An error occurred during registration');
-      setSuccess('');
+      setError("An error occurred during registration");
+      setSuccess("");
     }
   };
 
@@ -55,9 +56,10 @@ const navigate = useNavigate()
     <div className="flex items-center justify-center min-h-screen bg-gray-100 w-full">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-semibold text-center">Register</h2>
-        <p className="text-gray-500 text-center mb-4">Getting started is easy</p>
+        <p className="text-gray-500 text-center mb-4">
+          Getting started is easy
+        </p>
 
-       
         <div className="flex justify-center mb-4">
           <button className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center mr-2">
             <img
@@ -80,9 +82,10 @@ const navigate = useNavigate()
         <hr className="my-4" />
         <p className="text-center mb-4">Or continue with</p>
 
-        {/* Error and success messages */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+        {success && (
+          <p className="text-green-500 text-center mb-4">{success}</p>
+        )}
 
         <form onSubmit={handleSubmit}>
           <input
@@ -132,8 +135,10 @@ const navigate = useNavigate()
             Create Account
           </button>
         </form>
-        <div className='flex justify-center mt-5'>
-        <Link className='hover:text-green-600  text-center' to='/login'>LOGIN</Link>
+        <div className="flex justify-center mt-5">
+          <Link className="hover:text-green-600  text-center" to="/login">
+            LOGIN
+          </Link>
         </div>
       </div>
     </div>
@@ -141,4 +146,3 @@ const navigate = useNavigate()
 };
 
 export default Register;
-

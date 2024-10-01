@@ -1,45 +1,48 @@
-
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <aside className="w-32 bg-white h-screen p-6 border-r">
-      <img src="./img/OctomLogo.svg" alt="Logo" />
+    <aside className="w-[128px] bg-white h-screen p-6 border-r border-gray-200">
+      <img src="./img/OctomLogo.svg" alt="Logo" className="w-full mb-16" />
 
-      <ul className="mt-[9.438rem] flex flex-col justify-center items-center gap-[2.813rem]">
+      <ul className="flex flex-col justify-start items-center gap-10 mt-10">
         <li>
           <img
             onClick={() => {
               navigate("/");
             }}
-            className="w-5 cursor-pointer"
+            className="w-6 cursor-pointer"
             src="./img/GridMenu.svg"
-            alt=""
+            alt="Menu"
           />
         </li>
         <li>
-          <img className="w-5" src="./img/Icon2.svg" alt="" />
+          <img className="w-6" src="./img/Icon2.svg" alt="Icon 2" />
         </li>
         <li>
-          <img className="w-5" src="./img/book.svg" alt="sfsf" />
+          <img className="w-6" src="./img/book.svg" alt="Book" />
         </li>
         <li>
           <img
             onClick={() => {
               navigate("/seting");
             }}
-            className="w-5 cursor-pointer "
+            className="w-6 cursor-pointer"
             src="./img/Seting.svg"
-            alt=""
+            alt="Settings"
           />
         </li>
         <li>
-          <img className="w-5" src="./img/Message.svg" alt="sfs" />
+          <img className="w-6" src="./img/Message.svg" alt="Messages" />
         </li>
         <li>
-          <img className="w-5" src="./img/File.svg" alt="sdfsf" />
+          <img
+          onClick={() => {
+            navigate("/file");
+          }}
+          className="w-6" src="./img/File.svg" alt="Files" />
         </li>
       </ul>
     </aside>

@@ -1,31 +1,27 @@
-
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
+  function handleRegister(event) {
+    event.preventDefault();
+    navigate("/login");
+  }
 
-function handleRegistor(event) {
-  event.preventDefault();
-  navigate("/login")
-
-}
-
-
-function handleSeting(event) {
-  event.preventDefault();
-  navigate("/seting")
-
-}
+  function handleSettings(event) {
+    event.preventDefault();
+    navigate("/seting");
+  }
 
   return (
-    <div className=" justify-betwin flex h-[4.75rem] w-full  items-center ">
+    <div className="flex h-[76px] w-full items-center justify-between px-8">
       <div>
-        <label className=" bg-customColor input input-bordered rounded-md flex w-[18.125rem] h-[2.75rem] mr-[26.125rem] ml-[29.875rem] items-center gap-2">
+        <label className="bg-customColor input input-bordered rounded-md flex w-[290px] h-[44px] items-center gap-2">
           <input
             type="text"
             className="grow"
             placeholder="Search anything..."
+            style={{ outline: "none", border: "none" }}
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +38,7 @@ function handleSeting(event) {
         </label>
       </div>
 
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center gap-4">
         <button className="btn btn-ghost btn-circle">
           <div className="indicator">
             <svg
@@ -70,7 +66,7 @@ function handleSeting(event) {
           >
             <div className="w-10 rounded-full">
               <img
-                alt="Tailwind CSS Navbar component"
+                alt="Profile"
                 src="./img/ProfileFoto.svg"
               />
             </div>
@@ -79,17 +75,16 @@ function handleSeting(event) {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li onClick={handleSeting}>
+            <li onClick={handleSettings}>
               <a className="justify-between">Profile</a>
             </li>
 
-            <li onClick={handleRegistor}>
+            <li onClick={handleRegister}>
               <a>Logout</a>
             </li>
           </ul>
         </div>
       </div>
-
     </div>
   );
 };
