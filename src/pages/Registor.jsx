@@ -63,7 +63,7 @@ const Register = () => {
         <div className="flex justify-center mb-4">
           <button className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center mr-2">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/9b/Google_Icons_Logo.png"
+              src="./img/google.svg"
               alt="Google"
               className="h-5 mr-2"
             />
