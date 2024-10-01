@@ -52,7 +52,7 @@ const Seting = () => {
         <Link to="/" className="font-semibold hover:text-[#232360] text-[#6A7181]">Team</Link>
         <Link to="/" className="font-semibold hover:text-[#232360] text-[#6A7181]">Plan</Link>
         <Link to="/" className="font-semibold hover:text-[#232360] text-[#6A7181]">Billing</Link>
-        <Link to="/" className="font-semibold hover:text-[#232360] text-[#6A7181]">Email</Link>
+        <Link to="/seting" className="font-semibold hover:text-[#232360] text-[#6A7181]">Email</Link>
         <Link to="/" className="font-semibold hover:text-[#232360] text-[#6A7181]">Notification</Link>
       </ul>
 
