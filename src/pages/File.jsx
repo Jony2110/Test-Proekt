@@ -5,7 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 const initialData = {
   columns: {
     backlog: { name: 'Doing', items: [] },
-    todo: { name: 'Panding', items: [] },
+    todo: { name: 'Pending', items: [] },
     inProgress: { name: 'Testing', items: [] },
     review: { name: 'Done', items: [] }
   }
@@ -24,7 +24,6 @@ function File() {
     const { destination, source } = result;
     if (!destination) return;
 
-    
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -39,7 +38,6 @@ function File() {
     const [removed] = sourceItems.splice(source.index, 1);
     const destItems = Array.from(destColumn.items);
 
-    
     if (sourceColumn === destColumn) {
       sourceItems.splice(destination.index, 0, removed);
       setColumns({
@@ -67,7 +65,7 @@ function File() {
 
   const addItem = (columnId) => {
     if (!newTaskContent.trim()) return;
-    const newTask = { id: Date.now().toString(), content: newTaskContent };
+    const newTask = { id: Date.now().toString(), content: newTaskContent, comments: [] };
 
     setColumns((prevColumns) => ({
       ...prevColumns,
@@ -177,27 +175,27 @@ function File() {
         overlayClassName="fixed inset-0 bg-black bg-opacity-50"
       >
         <div className="bg-white rounded-lg p-6 max-w-md w-full">
-          <h2 className="text-xl font-semibold mb-4">Edit Task</h2>
+          <h2 className="text-xl font-semibold mb-4">Редактировать задачу</h2>
           {currentTask && (
             <>
               <input
                 type="text"
                 value={currentTask.content}
                 onChange={(e) => setCurrentTask({ ...currentTask, content: e.target.value })}
-                placeholder="Task Name"
+                placeholder="Имя задачи"
                 className="border border-gray-300 rounded mb-4 w-full p-2"
               />
               <textarea
                 value={currentTask.description || ''}
                 onChange={(e) => setCurrentTask({ ...currentTask, description: e.target.value })}
-                placeholder="Description"
+                placeholder="Описание"
                 className="border border-gray-300 rounded mb-4 w-full p-2"
               />
               <input
                 type="text"
                 value={currentTask.priority || ''}
                 onChange={(e) => setCurrentTask({ ...currentTask, priority: e.target.value })}
-                placeholder="Priority"
+                placeholder="Приоритет"
                 className="border border-gray-300 rounded mb-4 w-full p-2"
               />
               <input
@@ -208,7 +206,7 @@ function File() {
               />
               <input
                 type="text"
-                placeholder="Add a comment..."
+                placeholder="Добавьте комментарий..."
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && e.target.value) {
                     setCurrentTask({

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import Modal from "react-modal"; // используем библиотеку react-modal для модальных окон
 
 const ItemType = "CARD";
 
@@ -13,6 +14,8 @@ const BoardDetail = () => {
         inProgress: [],
         review: [],
     });
+    const [selectedTask, setSelectedTask] = useState(null); 
+    const [isModalOpen, setIsModalOpen] = useState(false); 
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -20,7 +23,7 @@ const BoardDetail = () => {
             const token = localStorage.getItem("authToken");
             if (token) {
                 try {
-                    const response = await fetch(`https://trello.vimlc.uz/api/boards/${boardId}/tasks`, {
+                    const response = await fetch(`https://trello.vimlc.uz/api/tasks/${boardId}`, {
                         method: "GET",
                         headers: {
                             "Authorization": `Bearer ${token}`,
@@ -81,22 +84,17 @@ const BoardDetail = () => {
         }));
     };
 
-    const moveCard = (id, toColumn) => {
-        const fromColumn = Object.keys(cards).find((column) =>
-            cards[column].some((card) => card.id === id)
-        );
+    const moveCard = (id, fromColumn, toColumn) => {
+        const cardToMove = cards[fromColumn].find((card) => card.id === id);
 
-        const card = cards[fromColumn].find((card) => card.id === id);
+        const updatedFromColumn = cards[fromColumn].filter((card) => card.id !== id);
+        const updatedToColumn = [...cards[toColumn], { ...cardToMove }];
 
-        if (fromColumn === toColumn) {
-            return;
-        }
-
-        setCards((prevCards) => ({
-            ...prevCards,
-            [fromColumn]: prevCards[fromColumn].filter((card) => card.id !== id),
-            [toColumn]: [...prevCards[toColumn], card],
-        }));
+        setCards({
+            ...cards,
+            [fromColumn]: updatedFromColumn,
+            [toColumn]: updatedToColumn,
+        });
     };
 
     const handleAddCard = async (e, category) => {
@@ -132,7 +130,7 @@ const BoardDetail = () => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    const createdCard = { id: result.id, title: cardText };
+                    const createdCard = { id: result.id, title: cardText, status: category };
                     addCard(category, createdCard);
                     e.target.reset();
                 } else {
@@ -141,6 +139,53 @@ const BoardDetail = () => {
             } catch (error) {
                 console.error("Ошибка при выполнении запроса:", error);
             }
+        }
+    };
+
+    const openModal = (task) => {
+        setSelectedTask(task);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedTask(null);
+    };
+
+    const handleTaskUpdate = async (updatedTask) => {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            console.error("Токен не найден. Пожалуйста, авторизуйтесь.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://trello.vimlc.uz/api/tasks/${taskId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedTask),
+            });
+
+            if (response.ok) {
+                
+                setCards((prevCards) => {
+                    const updatedCards = { ...prevCards };
+                    const category = updatedTask.status || "backlog";
+                    updatedCards[category] = updatedCards[category].map((card) =>
+                        card.id === updatedTask.id ? updatedTask : card
+                    );
+                    return updatedCards;
+                });
+                closeModal();
+            } else {
+                console.error("Ошибка при обновлении задачи:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
         }
     };
 
@@ -157,19 +202,28 @@ const BoardDetail = () => {
                             cards={cards[category]}
                             moveCard={moveCard}
                             handleAddCard={handleAddCard}
+                            openModal={openModal} // добавляем функцию открытия модального окна
                         />
                     ))}
                 </div>
+                {selectedTask && (
+                    <TaskModal
+                        task={selectedTask}
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                        onUpdate={handleTaskUpdate}
+                    />
+                )}
             </div>
         </DndProvider>
     );
 };
 
-const Column = ({ category, cards, moveCard, handleAddCard }) => {
+const Column = ({ category, cards, moveCard, handleAddCard, openModal }) => {
     const [, drop] = useDrop({
         accept: ItemType,
         drop: (item) => {
-            moveCard(item.id, category);
+            moveCard(item.id, item.fromColumn, category);
         },
     });
 
@@ -188,18 +242,18 @@ const Column = ({ category, cards, moveCard, handleAddCard }) => {
                 </button>
             </form>
             <ul>
-                {cards.map((card, index) => (
-                    <Card key={`${category}-${card.id}-${index}`} card={card} />
+                {cards.map((card) => (
+                    <Card key={card.id} card={card} moveCard={moveCard} fromColumn={category} openModal={openModal} />
                 ))}
             </ul>
         </div>
     );
 };
 
-const Card = ({ card }) => {
+const Card = ({ card, moveCard, fromColumn, openModal }) => {
     const [{ isDragging }, drag] = useDrag({
         type: ItemType,
-        item: { id: card.id },
+        item: { id: card.id, fromColumn },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
@@ -208,13 +262,63 @@ const Card = ({ card }) => {
     return (
         <div
             ref={drag}
-            className={`bg-gray-100 p-2 rounded mb-2 shadow-sm ${
-                isDragging ? "opacity-50" : ""
-            }`}
+            className={`bg-gray-100 p-2 rounded mb-2 shadow-sm ${isDragging ? "opacity-50" : ""}`}
+            onClick={() => openModal(card)} // открываем модал по клику
         >
             <h3 className="font-bold">{card.title}</h3>
-            
         </div>
+    );
+};
+
+// Компонент модального окна для редактирования задачи
+const TaskModal = ({ task, isOpen, onRequestClose, onUpdate }) => {
+    const [title, setTitle] = useState(task.title);
+    const [description, setDescription] = useState(task.description || "");
+    const [priority, setPriority] = useState(task.priority || "low");
+
+    const handleSave = () => {
+        const updatedTask = {
+            ...task,
+            title,
+            description,
+            priority,
+        };
+        onUpdate(updatedTask);
+    };
+
+    return (
+        <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
+            <h2 className="text-lg font-bold">Редактировать задачу</h2>
+            <form>
+                <div>
+                    <label>Название:</label>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="border border-gray-300 rounded w-full p-2 mb-2"
+                    />
+                </div>
+                <div>
+                    <label>Описание:</label>
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="border border-gray-300 rounded w-full p-2 mb-2"
+                    />
+                </div>
+                <div>
+                    <label>Приоритет:</label>
+                    <select value={priority} onChange={(e) => setPriority(e.target.value)} className="border border-gray-300 rounded w-full p-2 mb-2">
+                        <option value="low">Низкий</option>
+                        <option value="medium">Средний</option>
+                        <option value="high">Высокий</option>
+                    </select>
+                </div>
+                <button type="button" onClick={handleSave} className="bg-blue-500 text-white p-2 rounded">Сохранить</button>
+                <button type="button" onClick={onRequestClose} className="bg-red-500 text-white p-2 rounded ml-2">Закрыть</button>
+            </form>
+        </Modal>
     );
 };
 
