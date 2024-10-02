@@ -4,10 +4,10 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const initialData = {
   columns: {
-    backlog: { name: 'Backlog', items: [] },
-    todo: { name: 'To Do', items: [] },
-    inProgress: { name: 'In Progress', items: [] },
-    review: { name: 'Review', items: [] }
+    backlog: { name: 'Doing', items: [] },
+    todo: { name: 'Panding', items: [] },
+    inProgress: { name: 'Testing', items: [] },
+    review: { name: 'Done', items: [] }
   }
 };
 
@@ -24,12 +24,12 @@ function File() {
     const { destination, source } = result;
     if (!destination) return;
 
-    // Проверка на то, что элемент остался в том же месте
+    
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
-      return; // Если позиция и колонка не изменились, ничего не делать
+      return; 
     }
 
     const sourceColumn = columns[source.droppableId];
@@ -39,7 +39,7 @@ function File() {
     const [removed] = sourceItems.splice(source.index, 1);
     const destItems = Array.from(destColumn.items);
 
-    // Если перемещаем в ту же колонку
+    
     if (sourceColumn === destColumn) {
       sourceItems.splice(destination.index, 0, removed);
       setColumns({
